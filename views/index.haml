@@ -1,7 +1,4 @@
-- if @words.any?
-  %p
-    - @words.each do |word|
-      #{word.word}
 %form{:method => 'POST', :action => '/'}
-  %input{:type => 'text', :name => 'word'}
-  %input{:type => 'submit'}
+  %input{:type => 'text', :name => 'word', :id => 'word'}
+  %input{:type => 'submit', :id => 'submit'}
+%canvas{:id => 'content-canvas', :width => '900px', :style => 'border: 1px solid black;'}

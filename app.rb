@@ -4,6 +4,7 @@ require 'sinatra/flash'
 require 'data_mapper'
 require 'dm-core'
 require 'dm-migrations'
+require 'json'
 
 class Words
   include DataMapper::Resource
@@ -49,5 +50,10 @@ class WordsBrainApp < Sinatra::Base
   post '/' do
     create_word if exist? && length_equal_one? && cn?
     redirect to('/')
+  end
+
+  post '/ajax' do
+    content_type :json
+    Words.all.map { |word| word.word }.to_json
   end
 end
