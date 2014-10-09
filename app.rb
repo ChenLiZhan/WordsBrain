@@ -16,18 +16,25 @@ end
 DataMapper.finalize
 
 module Wordshelpers
-  def create_word(word)
-    Words.count(:word => "#{params[:word]}") == 0 ? Words.create(:word => params[:word], :created_time => Time.now) : false
+  def is_exist?
+    Words.count(:word => params[:word]) == 0
+  end
+
+  def length_equal_one?
+    params[:word].length == 1
+  end
+
+  def is_cn?
+    cn = /[\u4e00-\u9fa5]/
+    (params[:word] =~ cn) != nil
+  end
+  def create_word
+    Words.create(:word => params[:word], :created_time => Time.now)
   end
 end
 
 class WordsBrainApp < Sinatra::Base
   helpers Wordshelpers
-  enable :method_override
-
-  configure do
-    enable :sessions
-  end
 
   configure :development do
     DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
@@ -39,7 +46,7 @@ class WordsBrainApp < Sinatra::Base
   end
 
   post '/' do
-    create_word
+    create_word if is_exist? && length_equal_one? && is_cn?
     redirect to('/')
   end
 end
