@@ -16,7 +16,7 @@ end
 DataMapper.finalize
 
 module Wordshelpers
-  def is_exist?
+  def exist?
     Words.count(:word => params[:word]) == 0
   end
 
@@ -24,10 +24,11 @@ module Wordshelpers
     params[:word].length == 1
   end
 
-  def is_cn?
+  def cn?
     cn = /[\u4e00-\u9fa5]/
     (params[:word] =~ cn) != nil
   end
+
   def create_word
     Words.create(:word => params[:word], :created_time => Time.now)
   end
@@ -46,7 +47,7 @@ class WordsBrainApp < Sinatra::Base
   end
 
   post '/' do
-    create_word if is_exist? && length_equal_one? && is_cn?
+    create_word if exist? && length_equal_one? && cn?
     redirect to('/')
   end
 end
